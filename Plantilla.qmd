@@ -9,8 +9,8 @@ editor: visual
 #| message: false
 #| echo: false
 # Esto ya debiera estar cargado en el proyecto en posit.cloud
-# devtools::install_github("business-science/tidyquant")
-# Loads tidyquant, lubridate, xts, quantmod, TTR, and PerformanceAnalytics
+#devtools::install_github("business-science/tidyquant")
+#Loads tidyquant, lubridate, xts, quantmod, TTR, and PerformanceAnalytics
 library(tidyverse)
 library(tidyquant)  
 ```
@@ -173,4 +173,119 @@ A continu tación se desglozan los derivados de Enel Chile:
 
 ### Reporte grupal
 
-Definicion de un balance de portafolio sobre los 3 activos del grupo, donde se especifique los pesos de cada activo de tal forma que maximize el retorno de la cartera.
+Se decidieron los siguientes pesos del portafolio basándose en distintos factores, pero principalente la estimación de crecimiento a un año de cada uno de los activos proporcionada por Yahoo Finance. Los porcentajes del portafolio serán los siguientes:
+
+-   Enel: 50%
+
+-   Banco de Chile: 30%
+
+-   Parque Arauco: 20%
+
+En primer lugar, se determinó que Enel Chile tendra un 50% de peso en el portafolio debido al pronostico de crecimiento que tendrá en el proximo año (65.80%). Además en los ultimos 2 años ha obtenido un retorno promedio de 37.5%, mayor que los activos elegidos en las otras industrias. Otro aspecto que nos hizo elegir un peso mayor que las otras compañia es su compromiso con el medio ambiente, aspecto que cada vez es mas valordo. Por otro lado, la empresa ha invertido fuertemente en nuevos proyectos que probablemente demuestren mayores retornos en el futuro.
+
+Por otro lado, al Banco de Chile se le asignó un 30% de peso en el portafolio debido a su liderzago en la industria bancaria en terminos de rentabilidad y ha jugado un papel sumamente importante a lo largo de los años en la industria financiera. Junto a esto, la proyección del banco en terminos de crecimiento para los proximos años, es positiva y cercana a un 11.8%.
+
+Finalmente, a Parque Arauco se le otorgó un 20% del portafolio debido a la diversificación del modelo de negocios que han implementado en los últimos años. El ingreso al negocio de los edificios multifamily podría ser una razón de gran crecimiento para la empresa en el futuro, debido a que actualmente ya operan dos edificios en Santiago, tienen proyectos que estarán operando en el corto plazo en Perú y Colombia, y tienen planes de seguir ampliando esta cantidad. Considerando la gran demanda de arriendo que existe hoy en día, la empresa podría verse muy beneficiada con la implementación de este nuevo negocio.
+
+### Modelo Black and Scholes (BS)
+
+```{r}
+black_scholes <- function(S, K, t, r, sigma) {
+    d1 <- (log(S/K) + (r + 0.5 * sigma^2) * t) / (sigma * sqrt(t))
+    d2 <- d1 - sigma * sqrt(t)
+    N_d1 <- pnorm(d1)
+    N_d2 <- pnorm(d2)
+    precio_call <- S * N_d1 - K * exp(-r * t) * N_d2
+    return(precio_call)
+  }
+  
+rendimientos <- diff(log(ENELCHILE$close))
+sigma<-sd(rendimientos[2:length(rendimientos)])
+volatilidad<-var(rendimientos[2:length(rendimientos)])
+
+
+S<- tail(ENELCHILE$close,1)
+K<- 40 # Precio del ejercicio
+R<- 0.0642 # Tasa libre de riesgo (Bonos BCH a 10 años al 12 de oct)
+t <- 1
+
+precio_call <- black_scholes(S, K, t, R, sigma)
+print(paste("El precio de la opción call es:", precio_call))
+
+
+```
+
+### Modelo alternativo Binomial
+
+El Modelo Binomial de valoración de opciones (BM por sus siglas en inglés) también conocido como Cox-Ross-Rubinstein, es un modelo que estima el valor de una opción en t=0 teniendo pagos futuros en sitintos estados (usualmente "Up" y "Down"). Este Modelo Binomial asume que no hay posibilidad de arbitraje en el mercado, detrminando el precio que sigue un activo activo sigue un random walk, en donde cada paso (tiempo) existe una proabilidad de que el precio suba o baje. (Ahmad, 2018).
+
+![Random Walk en BM de un paso (Ahmad, 2018)](Data/Screenshot%202023-10-19%20at%2010.33.38.png){fig-align="center"}
+
+Para calcular la valoración de la opción con el BM se debe definir $S_0$ que corresponde al precio actual del activo. Asimismo se debe determinar $u$ y $d$, factores por el que se multiplica $S_0$ en cada estado para obtener el precio del activo en cada caso en el siguiente periodo (t = 1):
+
+$$
+S_1 = \begin{cases}    S_0*u \text{ en el estado "Up"} \\    
+S_0*d \text{ en el estado "Down"}\end{cases}
+$$
+
+También se debe calcular la probabilidad $P$ de que ocurra el caso "Up", la porobabilidad de que ocurra el otro caso ("Down") simplemete quedaría en $(1-P)$. Pare el calculo de la porobabilidad se usa la siguiente ecuación:
+
+$$
+P = \frac{e^r-d}{u-d}
+$$
+
+Donde $r$ es la tasa libre de riesgo.
+
+Por otro lado se deben calcular $C_u$ y $C_d$ los cuales se obtienen como los precios de una opción europea:
+
+$$
+C_u = max(0, S_0*u-k)\\
+C_d = max(0, S_0*d-k)
+$$
+
+Finalmente el precio de la opción se calcula de la siguiente manera:
+
+$$
+V = \frac{C_u*P + C_d*(1-P)}{1+r}
+$$
+
+```{r}
+binomial_model <- function(cu, p, cd, rf) {
+  return((cu*p + cd*(1-p))/(1+rf))
+} 
+
+S <- tail(ENELCHILE$close,1)  # Precio actual del activo subyacente
+K <- 40  # Precio de ejercicio de la opción
+T <- 1  # Tiempo hasta la expiración (en años)
+r <- 0.0642 # Tasa de interés libre de riesgo
+u <- 1.1  # Factor de crecimiento en un paso hacia arriba
+d <- 0.9  # Factor de crecimiento en un paso hacia abajo
+
+Su <- S*u
+Sd <- S*d
+p <- (1+r-d)/((1+r)*(u-d))
+
+cu <- max(Su - K, 0)
+cd <- max(Sd - K, 0)
+
+print(binomial_model(cu, p, cd, r))
+
+```
+
+### Comparación de modelos
+
+Ambos modelos son comunmente utilizados en las finanzas, por ende se puede afirmar que ambos modelos son resapaldados y tienen sustentos. Segun el paper (Ahmad, 2018) el resultado del precio de la opción calculado con ambos modelos tienen una correlación muy cercana a 1, lo que que significa que si con un modelo aumenta el precio de la opción, con el otro también. Sin embargo, esto no resulta en que ambos modelos nos otorgen el mismo precio, tal como se ve en el ejercicio anterior.
+
+Estos modelos difieren en algunas cosas, tales como:
+
+-   Precio del activo subyacente: En modelo Black and Scholes sigue una distribución lognormal mientras que el Binomial multiplica el valos $S_0$ con dos opciones ($u$ y $d$)
+
+-   Debido a lo anterior, el modelo de Black and Scholes es continuo y el Binomial discreto.
+
+-   El modelo BS sirve solo para opciones europeas, mientras que el Binomial también sirve para opciones americanas.
+
+En resumen, el modelo de Black-Scholes constituye una buena herramienta analítica para valorar opciones europeas y supone movimientos continuos en las cotizaciones del mercado. En cambio, el modelo Binomial ofrece mayor flexibilidad al emplear una estructura de árbol que facilita la valoración tanto de opciones europeas como americanas. Elegir uno u otro modelo dependerá del tipo específico de opción que se esté analizando y las inferencias que se quieran hacer en relación a cómo evolucionarán los precios en el mercado financiero.
+
+## Bibliografía
+
+Ahmad Dar, A., Anuradha, N., 1 Department of Mathematics and Actuarial Science, B S Abdur Rahman Crescent University, IN, & 2 Department of Management Studies, B S Abdur Rahman Crescent University, IN. (2018). Comparison: Binomial model and Black Scholes model. *Quantitative Finance and Economics*, *2*(1), 230--245. <https://doi.org/10.3934/QFE.2018.1.230>
