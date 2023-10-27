@@ -306,9 +306,11 @@ Los datos se obtuvieron en su mayoría del Estado Financiero de la empresa Enel 
 
 El caso escogido para replicar con nuestro activo fue el del capítulo 28 del libro guía del curso "Finanzas Corporativas" de Ross, en el cual se evalúan tres opciones. A continuación, se presentan los datos:
 
-![Datos ENELCHILE para Caso Cap.28](Data/Screenshot 2023-10-26 at 19.47.47.png)
+![Datos de Estado Financiero ENELCHILE](Data/Screenshot 2023-10-26 at 22.43.45.png)
 
-A partir de lo anterior, se puede determianar que el la opción 3 es la mejor debido a que obtiene el VPN mayor.
+![Datos ENELCHILE para Caso Cap.28](Data/Screenshot%202023-10-26%20at%2019.47.47.png)
+
+A partir de lo anterior, se puede determianar que el la opción 1 es la mejor debido a que obtiene el VPN mayor. Las opciones 2 y 3 dan un valor menor a la 1, lo que no se consideran optimas en este escenario.
 
 ## Bibliografía
 

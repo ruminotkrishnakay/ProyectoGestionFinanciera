@@ -258,9 +258,9 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb2-17"><a href="#cb2-17" aria-hidden="true" tabindex="-1"></a>R<span class="ot">&lt;-</span> <span class="fl">0.0642</span> <span class="co"># Tasa de interés libre de riesgo</span></span>
 <span id="cb2-18"><a href="#cb2-18" aria-hidden="true" tabindex="-1"></a>t <span class="ot">&lt;-</span> <span class="dv">1</span> <span class="co"># Tiempo hasta la expiración (en años)</span></span>
 <span id="cb2-19"><a href="#cb2-19" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-20"><a href="#cb2-20" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(<span class="fu">paste</span>(<span class="st">"El precio de la opción con el modelo Black and Scholes es "</span>, <span class="fu">black_scholes</span>(S, K, t, R, sigma)))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb2-20"><a href="#cb2-20" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(<span class="fu">paste</span>(<span class="st">"El precio de la opción con el Modelo Black and Scholes es "</span>, <span class="fu">black_scholes</span>(S, K, t, R, sigma)))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>[1] "El precio de la opción con el modelo Black and Scholes es  3.35294022411559"</code></pre>
+<pre><code>[1] "El precio de la opción con el Modelo Black and Scholes es  3.35294022411559"</code></pre>
 </div>
 </div>
 </section>
@@ -342,11 +342,17 @@ V = \frac{C_u*P + C_d*(1-P)}{1+r}
 <p>El caso escogido para replicar con nuestro activo fue el del capítulo 28 del libro guía del curso “Finanzas Corporativas” de Ross, en el cual se evalúan tres opciones. A continuación, se presentan los datos:</p>
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
+<p><img src="Data/Screenshot%202023-10-26%20at%2022.43.45.png" class="img-fluid figure-img"></p>
+<figcaption class="figure-caption">Datos de Estado Financiero ENELCHILE</figcaption>
+</figure>
+</div>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
 <p><img src="Data/Screenshot%202023-10-26%20at%2019.47.47.png" class="img-fluid figure-img"></p>
 <figcaption class="figure-caption">Datos ENELCHILE para Caso Cap.28</figcaption>
 </figure>
 </div>
-<p>A partir de lo anterior, se puede determianar que el la opción 3 es la mejor debido a que obtiene el VPN mayor.</p>
+<p>A partir de lo anterior, se puede determianar que el la opción 1 es la mejor debido a que obtiene el VPN mayor. Las opciones 2 y 3 dan un valor menor a la 1, lo que no se consideran optimas en este escenario.</p>
 </section>
 <section id="bibliografía" class="level2">
 <h2 class="anchored" data-anchor-id="bibliografía">Bibliografía</h2>
