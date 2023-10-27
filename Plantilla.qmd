@@ -15,6 +15,8 @@ library(tidyverse)
 library(tidyquant)  
 ```
 
+# Hito 1:
+
 ## Descripción Activo y Contexto
 
 Fecha de entrega: Jueves 28 de Septiembre 23:59.
@@ -187,6 +189,8 @@ Por otro lado, al Banco de Chile se le asignó un 30% de peso en el portafolio d
 
 Finalmente, a Parque Arauco se le otorgó un 20% del portafolio debido a la diversificación del modelo de negocios que han implementado en los últimos años. El ingreso al negocio de los edificios multifamily podría ser una razón de gran crecimiento para la empresa en el futuro, debido a que actualmente ya operan dos edificios en Santiago, tienen proyectos que estarán operando en el corto plazo en Perú y Colombia, y tienen planes de seguir ampliando esta cantidad. Considerando la gran demanda de arriendo que existe hoy en día, la empresa podría verse muy beneficiada con la implementación de este nuevo negocio.
 
+# Hito 2:
+
 ### Modelo Black and Scholes (BS)
 
 ```{r}
@@ -204,31 +208,30 @@ sigma<-sd(rendimientos[2:length(rendimientos)])
 volatilidad<-var(rendimientos[2:length(rendimientos)])
 
 
-S<- tail(ENELCHILE$close,1)
-K<- 40 # Precio del ejercicio
-R<- 0.0642 # Tasa libre de riesgo (Bonos BCH a 10 años al 12 de oct)
-t <- 1
+S<- tail(ENELCHILE$close,1) # Precio actual del activo subyacente
+K<- 38 # Precio de ejercicio de la opción
+R<- 0.0642 # Tasa de interés libre de riesgo
+t <- 1 # Tiempo hasta la expiración (en años)
 
-precio_call <- black_scholes(S, K, t, R, sigma)
-print(paste("El precio de la opción call es:", precio_call))
+print(paste("El precio de la opción con el Modelo Black and Scholes es ", black_scholes(S, K, t, R, sigma)))
 
 
 ```
 
-### Modelo alternativo Binomial
+### Modelo alternativo: Modelo Binomial
 
-El Modelo Binomial de valoración de opciones (BM por sus siglas en inglés) también conocido como Cox-Ross-Rubinstein, es un modelo que estima el valor de una opción en t=0 teniendo pagos futuros en sitintos estados (usualmente "Up" y "Down"). Este Modelo Binomial asume que no hay posibilidad de arbitraje en el mercado, detrminando el precio que sigue un activo activo sigue un random walk, en donde cada paso (tiempo) existe una proabilidad de que el precio suba o baje. (Ahmad, 2018).
+El Modelo Binomial de Valoración de Opciones (BM, por sus siglas en inglés) también conocido como Cox-Ross-Rubinstein, es un modelo que estima el valor de una opción en t=0 teniendo pagos futuros en diferentes estados (usualmente "Up" y "Down"). Este Modelo Binomial asume que no hay posibilidad de arbitraje en el mercado, determinando el precio que sigue un activo en un random walk, en donde en cada paso (tiempo) existe una probabilidad de que el precio suba o baje (Ahmad, 2018).
 
 ![Random Walk en BM de un paso (Ahmad, 2018)](Data/Screenshot%202023-10-19%20at%2010.33.38.png){fig-align="center"}
 
-Para calcular la valoración de la opción con el BM se debe definir $S_0$ que corresponde al precio actual del activo. Asimismo se debe determinar $u$ y $d$, factores por el que se multiplica $S_0$ en cada estado para obtener el precio del activo en cada caso en el siguiente periodo (t = 1):
+Para calcular la valoración de la opción con el Modelo Binomial, es necesario definir $S_0$, que corresponde al precio actual del activo. Además, se deben determinar los valores de $u$ y $d$, que representan los factores por los cuales se multiplica $S_0$ en cada estado para obtener el precio del activo en cada caso en el siguiente período (t = 1):
 
 $$
 S_1 = \begin{cases}    S_0*u \text{ en el estado "Up"} \\    
 S_0*d \text{ en el estado "Down"}\end{cases}
 $$
 
-También se debe calcular la probabilidad $P$ de que ocurra el caso "Up", la porobabilidad de que ocurra el otro caso ("Down") simplemete quedaría en $(1-P)$. Pare el calculo de la porobabilidad se usa la siguiente ecuación:
+También se debe calcular la probabilidad $P$ de que ocurra el caso "Up", la probabilidad de que ocurra el otro caso ("Down") simplemete quedaría en $(1-P)$. Para el calculo de la porobabilidad se usa la siguiente ecuación:
 
 $$
 P = \frac{e^r-d}{u-d}
@@ -255,7 +258,7 @@ binomial_model <- function(cu, p, cd, rf) {
 } 
 
 S <- tail(ENELCHILE$close,1)  # Precio actual del activo subyacente
-K <- 40  # Precio de ejercicio de la opción
+K <- 38  # Precio de ejercicio de la opción
 T <- 1  # Tiempo hasta la expiración (en años)
 r <- 0.0642 # Tasa de interés libre de riesgo
 u <- 1.1  # Factor de crecimiento en un paso hacia arriba
@@ -268,13 +271,14 @@ p <- (1+r-d)/((1+r)*(u-d))
 cu <- max(Su - K, 0)
 cd <- max(Sd - K, 0)
 
-print(binomial_model(cu, p, cd, r))
+
+print(paste("El precio de la opción con el Modelo Binomial es ", binomial_model(cu, p, cd, r)))
 
 ```
 
 ### Comparación de modelos
 
-Ambos modelos son comunmente utilizados en las finanzas, por ende se puede afirmar que ambos modelos son resapaldados y tienen sustentos. Segun el paper (Ahmad, 2018) el resultado del precio de la opción calculado con ambos modelos tienen una correlación muy cercana a 1, lo que que significa que si con un modelo aumenta el precio de la opción, con el otro también. Sin embargo, esto no resulta en que ambos modelos nos otorgen el mismo precio, tal como se ve en el ejercicio anterior.
+Ambos modelos son comúnmente utilizados en las finanzas. Por lo tanto, se puede afirmar que cuentan con respaldo y fundamentos sólidos. Según el artículo de (Ahmad, 2018), los resultados del precio de la opción calculados con ambos modelos muestran una correlación muy cercana a 1, lo que significa que si el precio de la opción aumenta con un modelo, también lo hace con el otro. Sin embargo, esto no implica que ambos modelos proporcionen el mismo precio, como se puede observar en el ejercicio realizado anteriormente.
 
 Estos modelos difieren en algunas cosas, tales como:
 
@@ -284,7 +288,27 @@ Estos modelos difieren en algunas cosas, tales como:
 
 -   El modelo BS sirve solo para opciones europeas, mientras que el Binomial también sirve para opciones americanas.
 
+También tienen algunas similitudes:
+
+-   Ambos utilizan el precio actual del activo subyacente.
+
+-   Ambos usan la tasa libre de riesgo.
+
+-   En este caso los dos se usaron para un periodo de tiempo.
+
+-   Ambos consideran la volatilidad del activo.
+
 En resumen, el modelo de Black-Scholes constituye una buena herramienta analítica para valorar opciones europeas y supone movimientos continuos en las cotizaciones del mercado. En cambio, el modelo Binomial ofrece mayor flexibilidad al emplear una estructura de árbol que facilita la valoración tanto de opciones europeas como americanas. Elegir uno u otro modelo dependerá del tipo específico de opción que se esté analizando y las inferencias que se quieran hacer en relación a cómo evolucionarán los precios en el mercado financiero.
+
+### Caso Grupal
+
+Los datos se obtuvieron en su mayoría del Estado Financiero de la empresa Enel Chile a junio de 2023. Los datos que no pudieron ser encontrados se supusieron a partir de la misma información entregada en ese documento.
+
+El caso escogido para replicar con nuestro activo fue el del capítulo 28 del libro guía del curso "Finanzas Corporativas" de Ross, en el cual se evalúan tres opciones. A continuación, se presentan los datos:
+
+![Datos ENELCHILE para Caso Cap.28](Data/Screenshot 2023-10-26 at 19.47.47.png)
+
+A partir de lo anterior, se puede determianar que el la opción 3 es la mejor debido a que obtiene el VPN mayor.
 
 ## Bibliografía
 

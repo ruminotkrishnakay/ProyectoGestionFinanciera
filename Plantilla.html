@@ -103,6 +103,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 
 </header>
 
+<section id="hito-1" class="level1">
+<h1>Hito 1:</h1>
 <section id="descripción-activo-y-contexto" class="level2">
 <h2 class="anchored" data-anchor-id="descripción-activo-y-contexto">Descripción Activo y Contexto</h2>
 <p>Fecha de entrega: Jueves 28 de Septiembre 23:59.</p>
@@ -230,8 +232,12 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <p>Por otro lado, al Banco de Chile se le asignó un 30% de peso en el portafolio debido a su liderzago en la industria bancaria en terminos de rentabilidad y ha jugado un papel sumamente importante a lo largo de los años en la industria financiera. Junto a esto, la proyección del banco en terminos de crecimiento para los proximos años, es positiva y cercana a un 11.8%.</p>
 <p>Finalmente, a Parque Arauco se le otorgó un 20% del portafolio debido a la diversificación del modelo de negocios que han implementado en los últimos años. El ingreso al negocio de los edificios multifamily podría ser una razón de gran crecimiento para la empresa en el futuro, debido a que actualmente ya operan dos edificios en Santiago, tienen proyectos que estarán operando en el corto plazo en Perú y Colombia, y tienen planes de seguir ampliando esta cantidad. Considerando la gran demanda de arriendo que existe hoy en día, la empresa podría verse muy beneficiada con la implementación de este nuevo negocio.</p>
 </section>
-<section id="modelo-black-and-scholes" class="level3">
-<h3 class="anchored" data-anchor-id="modelo-black-and-scholes">Modelo Black and Scholes</h3>
+</section>
+</section>
+<section id="hito-2" class="level1">
+<h1>Hito 2:</h1>
+<section id="modelo-black-and-scholes-bs" class="level3">
+<h3 class="anchored" data-anchor-id="modelo-black-and-scholes-bs">Modelo Black and Scholes (BS)</h3>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>black_scholes <span class="ot">&lt;-</span> <span class="cf">function</span>(S, K, t, r, sigma) {</span>
 <span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>    d1 <span class="ot">&lt;-</span> (<span class="fu">log</span>(S<span class="sc">/</span>K) <span class="sc">+</span> (r <span class="sc">+</span> <span class="fl">0.5</span> <span class="sc">*</span> sigma<span class="sc">^</span><span class="dv">2</span>) <span class="sc">*</span> t) <span class="sc">/</span> (sigma <span class="sc">*</span> <span class="fu">sqrt</span>(t))</span>
@@ -247,33 +253,32 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb2-12"><a href="#cb2-12" aria-hidden="true" tabindex="-1"></a>volatilidad<span class="ot">&lt;-</span><span class="fu">var</span>(rendimientos[<span class="dv">2</span><span class="sc">:</span><span class="fu">length</span>(rendimientos)])</span>
 <span id="cb2-13"><a href="#cb2-13" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb2-14"><a href="#cb2-14" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-15"><a href="#cb2-15" aria-hidden="true" tabindex="-1"></a>S<span class="ot">&lt;-</span> <span class="fu">tail</span>(ENELCHILE<span class="sc">$</span>close,<span class="dv">1</span>)</span>
-<span id="cb2-16"><a href="#cb2-16" aria-hidden="true" tabindex="-1"></a>K<span class="ot">&lt;-</span> <span class="dv">40</span> <span class="co"># Precio del ejercicio</span></span>
-<span id="cb2-17"><a href="#cb2-17" aria-hidden="true" tabindex="-1"></a>R<span class="ot">&lt;-</span> <span class="fl">0.0642</span> <span class="co"># Tasa libre de riesgo (Bonos BCH a 10 años al 12 de oct)</span></span>
-<span id="cb2-18"><a href="#cb2-18" aria-hidden="true" tabindex="-1"></a>t <span class="ot">&lt;-</span> <span class="dv">1</span></span>
+<span id="cb2-15"><a href="#cb2-15" aria-hidden="true" tabindex="-1"></a>S<span class="ot">&lt;-</span> <span class="fu">tail</span>(ENELCHILE<span class="sc">$</span>close,<span class="dv">1</span>) <span class="co"># Precio actual del activo subyacente</span></span>
+<span id="cb2-16"><a href="#cb2-16" aria-hidden="true" tabindex="-1"></a>K<span class="ot">&lt;-</span> <span class="dv">38</span> <span class="co"># Precio de ejercicio de la opción</span></span>
+<span id="cb2-17"><a href="#cb2-17" aria-hidden="true" tabindex="-1"></a>R<span class="ot">&lt;-</span> <span class="fl">0.0642</span> <span class="co"># Tasa de interés libre de riesgo</span></span>
+<span id="cb2-18"><a href="#cb2-18" aria-hidden="true" tabindex="-1"></a>t <span class="ot">&lt;-</span> <span class="dv">1</span> <span class="co"># Tiempo hasta la expiración (en años)</span></span>
 <span id="cb2-19"><a href="#cb2-19" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-20"><a href="#cb2-20" aria-hidden="true" tabindex="-1"></a>precio_call <span class="ot">&lt;-</span> <span class="fu">black_scholes</span>(S, K, t, R, sigma)</span>
-<span id="cb2-21"><a href="#cb2-21" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(<span class="fu">paste</span>(<span class="st">"El precio de la opción call es:"</span>, precio_call))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb2-20"><a href="#cb2-20" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(<span class="fu">paste</span>(<span class="st">"El precio de la opción con el modelo Black and Scholes es "</span>, <span class="fu">black_scholes</span>(S, K, t, R, sigma)))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>[1] "El precio de la opción call es: 1.48456080795628"</code></pre>
+<pre><code>[1] "El precio de la opción con el modelo Black and Scholes es  3.35294022411559"</code></pre>
 </div>
 </div>
 </section>
-<section id="modelo-alternativo-binomial" class="level3">
-<h3 class="anchored" data-anchor-id="modelo-alternativo-binomial">Modelo alternativo Binomial</h3>
-<p>El Modelo Binomial de valoración de opciones (BM por sus siglas en inglés) también conocido como Cox-Ross-Rubinstein, es un modelo que estima el valor de una opción en t=0 teniendo pagos futuros en sitintos estados (usualmente “Up” y “Down”). Este Modelo Binomial asume que no hay posibilidad de arbitraje en el mercado, detrminando el precio que sigue un activo activo sigue un random walk, en donde cada paso (tiempo) existe una proabilidad de que el precio suba o baje. (Ahmad, 2018).</p>
+<section id="modelo-alternativo-modelo-binomial" class="level3">
+<h3 class="anchored" data-anchor-id="modelo-alternativo-modelo-binomial">Modelo alternativo: Modelo Binomial</h3>
+<p>El Modelo Binomial de Valoración de Opciones (BM, por sus siglas en inglés) también conocido como Cox-Ross-Rubinstein, es un modelo que estima el valor de una opción en t=0 teniendo pagos futuros en diferentes estados (usualmente “Up” y “Down”). Este Modelo Binomial asume que no hay posibilidad de arbitraje en el mercado, determinando el precio que sigue un activo en un random walk, en donde en cada paso (tiempo) existe una probabilidad de que el precio suba o baje (Ahmad, 2018).</p>
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
 <p><img src="Data/Screenshot%202023-10-19%20at%2010.33.38.png" class="img-fluid figure-img"></p>
 <figcaption class="figure-caption">Random Walk en BM de un paso (Ahmad, 2018)</figcaption>
 </figure>
 </div>
-<p>Para calcular la valoración de la opción con el BM se debe definir <span class="math inline">\(S_0\)</span> que corresponde al precio actual del activo. Asimismo se debe determinar <span class="math inline">\(u\)</span> y <span class="math inline">\(d\)</span>, factores por el que se multiplica <span class="math inline">\(S_0\)</span> en cada estado para obtener el precio del activo en cada caso en el siguiente periodo (t = 1):</p>
+<p>Para calcular la valoración de la opción con el Modelo Binomial, es necesario definir <span class="math inline">\(S_0\)</span>, que corresponde al precio actual del activo. Además, se deben determinar los valores de <span class="math inline">\(u\)</span> y <span class="math inline">\(d\)</span>, que representan los factores por los cuales se multiplica <span class="math inline">\(S_0\)</span> en cada estado para obtener el precio del activo en cada caso en el siguiente período (t = 1):</p>
 <p><span class="math display">\[
 S_1 = \begin{cases}    S_0*u \text{ en el estado "Up"} \\    
 S_0*d \text{ en el estado "Down"}\end{cases}
 \]</span></p>
-<p>También se debe calcular la probabilidad <span class="math inline">\(P\)</span> de que ocurra el caso “Up”, la porobabilidad de que ocurra el otro caso (“Down”) simplemete quedaría en <span class="math inline">\((1-P)\)</span>. Pare el calculo de la porobabilidad se usa la siguiente ecuación:</p>
+<p>También se debe calcular la probabilidad <span class="math inline">\(P\)</span> de que ocurra el caso “Up”, la probabilidad de que ocurra el otro caso (“Down”) simplemete quedaría en <span class="math inline">\((1-P)\)</span>. Para el calculo de la porobabilidad se usa la siguiente ecuación:</p>
 <p><span class="math display">\[
 P = \frac{e^r-d}{u-d}
 \]</span></p>
@@ -293,7 +298,7 @@ V = \frac{C_u*P + C_d*(1-P)}{1+r}
 <span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>} </span>
 <span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>S <span class="ot">&lt;-</span> <span class="fu">tail</span>(ENELCHILE<span class="sc">$</span>close,<span class="dv">1</span>)  <span class="co"># Precio actual del activo subyacente</span></span>
-<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a>K <span class="ot">&lt;-</span> <span class="dv">40</span>  <span class="co"># Precio de ejercicio de la opción</span></span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a>K <span class="ot">&lt;-</span> <span class="dv">38</span>  <span class="co"># Precio de ejercicio de la opción</span></span>
 <span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a>T <span class="ot">&lt;-</span> <span class="dv">1</span>  <span class="co"># Tiempo hasta la expiración (en años)</span></span>
 <span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a>r <span class="ot">&lt;-</span> <span class="fl">0.0642</span> <span class="co"># Tasa de interés libre de riesgo</span></span>
 <span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a>u <span class="ot">&lt;-</span> <span class="fl">1.1</span>  <span class="co"># Factor de crecimiento en un paso hacia arriba</span></span>
@@ -306,27 +311,47 @@ V = \frac{C_u*P + C_d*(1-P)}{1+r}
 <span id="cb4-16"><a href="#cb4-16" aria-hidden="true" tabindex="-1"></a>cu <span class="ot">&lt;-</span> <span class="fu">max</span>(Su <span class="sc">-</span> K, <span class="dv">0</span>)</span>
 <span id="cb4-17"><a href="#cb4-17" aria-hidden="true" tabindex="-1"></a>cd <span class="ot">&lt;-</span> <span class="fu">max</span>(Sd <span class="sc">-</span> K, <span class="dv">0</span>)</span>
 <span id="cb4-18"><a href="#cb4-18" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb4-19"><a href="#cb4-19" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(<span class="fu">binomial_model</span>(cu, p, cd, r))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb4-19"><a href="#cb4-19" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-20"><a href="#cb4-20" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(<span class="fu">paste</span>(<span class="st">"El precio de la opción con el Modelo Binomial es "</span>, <span class="fu">binomial_model</span>(cu, p, cd, r)))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>[1] 2.094327</code></pre>
+<pre><code>[1] "El precio de la opción con el Modelo Binomial es  3.54418880315908"</code></pre>
 </div>
 </div>
 </section>
 <section id="comparación-de-modelos" class="level3">
 <h3 class="anchored" data-anchor-id="comparación-de-modelos">Comparación de modelos</h3>
-<p>Ambos modelos son comunmente utilizados en las finanzas, por ende se puede afirmar que ambos modelos son resapaldados y tienen sustentos. Segun el paper (Ahmad, 2018) el resultado del precio de la opción calculado con ambos modelos tienen una correlación muy cercana a 1, lo que que significa que si con un modelo aumenta el precio de la opción, con el otro también. Sin embargo, esto no resulta en que ambos modelos nos otorgen el mismo precio, tal como se ve en el ejercicio anterior.</p>
+<p>Ambos modelos son comúnmente utilizados en las finanzas. Por lo tanto, se puede afirmar que cuentan con respaldo y fundamentos sólidos. Según el artículo de (Ahmad, 2018), los resultados del precio de la opción calculados con ambos modelos muestran una correlación muy cercana a 1, lo que significa que si el precio de la opción aumenta con un modelo, también lo hace con el otro. Sin embargo, esto no implica que ambos modelos proporcionen el mismo precio, como se puede observar en el ejercicio realizado anteriormente.</p>
 <p>Estos modelos difieren en algunas cosas, tales como:</p>
 <ul>
-<li><p>Precio del activo subyacente: En modelo Black and Scholes sigue una distribución lognormal mientras que el Binomial multiplica el valos <span class="math inline">\(S_0\)</span> con dos dos opciones (<span class="math inline">\(u\)</span> y <span class="math inline">\(d\)</span>)</p></li>
+<li><p>Precio del activo subyacente: En modelo Black and Scholes sigue una distribución lognormal mientras que el Binomial multiplica el valos <span class="math inline">\(S_0\)</span> con dos opciones (<span class="math inline">\(u\)</span> y <span class="math inline">\(d\)</span>)</p></li>
 <li><p>Debido a lo anterior, el modelo de Black and Scholes es continuo y el Binomial discreto.</p></li>
 <li><p>El modelo BS sirve solo para opciones europeas, mientras que el Binomial también sirve para opciones americanas.</p></li>
 </ul>
-<p>En resumen, el modelo de Black-Scholes constituye una buena herramienta analítica para valorar opciones europeas y supone movimientos continuos en las cotizaciones del mercado. En cambio, el modelo binomial ofrece mayor flexibilidad al emplear una estructura de árbol que facilita la valoración tanto de opciones europeas como americanas. Elegir uno u otro modelo dependerá del tipo específico de opción que se esté analizando y las inferencias que se quieran hacer en relación a cómo evolucionarán los precios en el mercado financiero.</p>
+<p>También tienen algunas similitudes:</p>
+<ul>
+<li><p>Ambos utilizan el precio actual del activo subyacente.</p></li>
+<li><p>Ambos usan la tasa libre de riesgo.</p></li>
+<li><p>En este caso los dos se usaron para un periodo de tiempo.</p></li>
+<li><p>Ambos consideran la volatilidad del activo.</p></li>
+</ul>
+<p>En resumen, el modelo de Black-Scholes constituye una buena herramienta analítica para valorar opciones europeas y supone movimientos continuos en las cotizaciones del mercado. En cambio, el modelo Binomial ofrece mayor flexibilidad al emplear una estructura de árbol que facilita la valoración tanto de opciones europeas como americanas. Elegir uno u otro modelo dependerá del tipo específico de opción que se esté analizando y las inferencias que se quieran hacer en relación a cómo evolucionarán los precios en el mercado financiero.</p>
 </section>
+<section id="caso-grupal" class="level3">
+<h3 class="anchored" data-anchor-id="caso-grupal">Caso Grupal</h3>
+<p>Los datos se obtuvieron en su mayoría del Estado Financiero de la empresa Enel Chile a junio de 2023. Los datos que no pudieron ser encontrados se supusieron a partir de la misma información entregada en ese documento.</p>
+<p>El caso escogido para replicar con nuestro activo fue el del capítulo 28 del libro guía del curso “Finanzas Corporativas” de Ross, en el cual se evalúan tres opciones. A continuación, se presentan los datos:</p>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="Data/Screenshot%202023-10-26%20at%2019.47.47.png" class="img-fluid figure-img"></p>
+<figcaption class="figure-caption">Datos ENELCHILE para Caso Cap.28</figcaption>
+</figure>
+</div>
+<p>A partir de lo anterior, se puede determianar que el la opción 3 es la mejor debido a que obtiene el VPN mayor.</p>
 </section>
 <section id="bibliografía" class="level2">
 <h2 class="anchored" data-anchor-id="bibliografía">Bibliografía</h2>
 <p>Ahmad Dar, A., Anuradha, N., 1 Department of Mathematics and Actuarial Science, B S Abdur Rahman Crescent University, IN, &amp; 2 Department of Management Studies, B S Abdur Rahman Crescent University, IN. (2018). Comparison: Binomial model and Black Scholes model. <em>Quantitative Finance and Economics</em>, <em>2</em>(1), 230–245. <a href="https://doi.org/10.3934/QFE.2018.1.230" class="uri">https://doi.org/10.3934/QFE.2018.1.230</a></p>
+</section>
 </section>
 
 </main>
