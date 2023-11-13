@@ -159,7 +159,7 @@ No existe registro del procedimiento utilizado para la emisión de estas accione
 
 #### Relación con activos derivados
 
-Para protección de la empresa, esta busca cobertura frente a posibles riesgos que puedan alterar los objetivos de la compañía. Ellos mismos señalan "Los derivadosb mantenidos por el Grupo corresponden fundamentalmente a operaciones contratadas con el fin de cubrir el riesgo..."
+Para protección de la empresa, esta busca cobertura frente a posibles riesgos que puedan alterar los objetivos de la compañía. Ellos mismos señalan "Los derivados mantenidos por el Grupo corresponden fundamentalmente a operaciones contratadas con el fin de cubrir el riesgo..."
 
 Enel Chile toma en consideración y protección frente los siguientes riesgos:
 
@@ -169,9 +169,14 @@ Enel Chile toma en consideración y protección frente los siguientes riesgos:
 4.  Riesgo de liquidez
 5.  Riesgo de crédito
 
-A continu tación se desglozan los derivados de Enel Chile:
+A continuación se desglozan los derivados de Enel Chile:
 
 ![](Data/Screenshot%202023-09-28%20at%2019.49.03.png){fig-align="center"}
+
+Los derivados se registran por su valor razonable en la fecha del estado de situación financiera. En el caso de los derivados financieros, si su valor es positivo, se registran en el rubro \"Otros activos financieros\", y si es negativo, en el rubro \"Otros pasivos financieros\". Si se trata de derivados sobre commodities, el valor positivo se registra en el rubro \"Cuentas comerciales por cobrar y otras cuentas por cobrar\" y si es negativo en el rubro \"Cuentas comerciales y otras cuentas por pagar\" (EEFF Enel Chile, Junio 2023).
+		
+
+	
 
 ### Reporte grupal
 
@@ -306,7 +311,7 @@ Los datos se obtuvieron en su mayoría del Estado Financiero de la empresa Enel 
 
 El caso escogido para replicar con nuestro activo fue el del capítulo 28 del libro guía del curso "Finanzas Corporativas" de Ross, en el cual se evalúan tres opciones. A continuación, se presentan los datos:
 
-![Datos de Estado Financiero ENELCHILE](Data/Screenshot 2023-10-26 at 22.43.45.png)
+![Datos de Estado Financiero ENELCHILE](Data/Screenshot%202023-10-26%20at%2022.43.45.png)
 
 ![Datos ENELCHILE para Caso Cap.28](Data/Screenshot%202023-10-26%20at%2019.47.47.png)
 
