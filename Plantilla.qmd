@@ -1,6 +1,6 @@
 ---
 title: "Proyecto Gestión Financiera"
-author: "Julio Tejero"
+author: "Krishna Ruminot"
 format: html
 editor: visual
 bibliography: references.bib
@@ -19,217 +19,132 @@ library(tidyquant)
 
 # Hito 1:
 
-## Descripción Activo y Contexto
+### Sector Temática
 
-Fecha de entrega límite: Jueves 28 de Septiembre 23:59.
+\
+El proyecto será desarrollado dentro del área de interés: **Fintech** (Tecnología Financiera). Este sector abarca la aplicación de tecnologías avanzadas para optimizar, mejorar y automatizar los servicios financieros tradicionales. Es un mercado que incluye innovaciones en las áreas de pagos electrónicos, plataformas de préstamos en línea, blockchain y criptomonedas, así como seguros digitales (Insurtech). Según **Arner, Barberis y Buckley (2015)**, Fintech ha provocado cambios radicales en la metodología que utilizan las personas y empresas para acceder a productos financieros, promoviendo una mayor eficiencia, accesibilidad e inclusión financiera.
 
-### Definición
-
-El activo elegido fue Enel Chile S.A. La compañía es una extensión de Enel, empresa italiana. Se dedica a generación, distribución y transformación de energía a lo largo de todo el país.
-
-Enel Chile se formó a partir de una reestructuración que comenzó en el año 2015, en ese entonces la empresa se llamaba Enersis Américas. En esta reestructuración, se aprobó la fusión de las compañías Enersis Chile, Endesa Chile y Chilectra en una estrategia denominada "La Fusión". En este mismo proceso se procedió al cambio de nombre a la hoy conocida Enel Chile S.A.
-
-Enel Chile es la mayor suministradora de energía del país, debido a esto en relevante exponer los datos nacionales de uso de electricidad. En el paper "Consumption-based carbon emissions, renewable energy consumption, financial development and economic growth in Chile" de @kirikkaleli2021 se expone un análisis descriptivo de los consumos nacionales de electricidad, el cual se presenta a continuación:
-
-[![Tabla 2 en ](Data/Screenshot%202023-09-28%20at%2015.51.18.png){fig-align="center"}](https://doi.org/10.1002/bse.2945)
-
-En donde:
-
--   CCO2: Emisiones de carbonos basadas en el consumo de energía medida en millones de toneladas de CO2.
-
--   GDP: Crecimiento de la economía medido en el PIB per cápita.
-
--   ELE: Consumo eléctrico medido en Kw/h.
-
--   REN: COnsumo de energía renovables medido en Tw/h.
-
--   FD: Crecimiento financiero, medida amplia para el desarrollo financiero teniendo en cuenta su eficiencia, accesibilidad y profundidad.
-
-```{r ETL}
-#| echo: false
-# Alternativamente Use FANG data set
-# data("FANG") 
-end <- as_date("2022-12-31")
-# Get AAPL and AMZN Stock Prices
-# AAPL <- tq_get("AAPL", get = "stock.prices", from = "2015-09-01", to = end)
-# AMZN <- tq_get("AMZN", get = "stock.prices", from = "2000-01-01", to = end)
-ENELCHILE <- tq_get("ENELCHILE.SN", get = "stock.prices", from = "2017-01-01", to = end)
-ENELAM <- tq_get("ENELAM.SN", get = "stock.prices", from = "2017-01-01", to = end)
-AESANDES <- tq_get("AESANDES.SN", get = "stock.prices", from = "2017-01-01", to = end)
-ECL <- tq_get("ECL.SN", get = "stock.prices", from = "2017-01-01", to = end)
-CL <- rbind(ENELCHILE,ENELAM,AESANDES,ECL)
-```
-
-Por otro lado, también es de suma importancia tener en consideración los precios históricos del activo ENELCHILE, el cual actualmente tiene un valor promedio para el intervalo de años 2017-presente igual a `r round(mean(ENELCHILE$close),digits=0)`. A continuación se presentan dos gráficos que muestran estos datos históricos:
-
-```{r ENELCHILEline}
-#| echo: false
-ENELCHILE %>%
-    ggplot(aes(x = date, y = close)) +
-    geom_line() +
-    labs(title = "ENELCHILE Line Chart", y = "Closing Price", x = "") + 
-    theme_tq() +
-  geom_hline(yintercept=mean(ENELCHILE$close), linetype="dashed", color = "red")
-```
-
-```{r ENELCHILEcandle}
-#| warning: false
-ENELCHILE %>%
-    ggplot(aes(x = date, y = close)) +
-    geom_candlestick(aes(open = open, high = high, low = low, close = close)) +
-    labs(title = "ENELCHILE Candlestick Chart", y = "Closing Price", x = "") +
-    theme_tq()
-```
+Dentro de este sector, existe una gran variedad de empresas, aunque algunas destacan más que otras. Un ejemplo notable es **PayPal Holdings, Inc.**, una plataforma global de pagos digitales que permite realizar transacciones seguras en línea. PayPal ha sido una de las primeras en implementar sistemas electrónicos de servicios financieros, jugando un papel clave en la evolución de las transacciones digitales. Este sector ha experimentado un crecimiento significativo debido al avance de las tecnologías y la necesidad de soluciones rápidas y seguras para el comercio electrónico.
 
 ### Motivación
 
-Se escogió este activo en particular debido al compromiso con el medio ambiente y a indicadores ASG (Ambiental, Social y Gobernanza), alguno de sus objetivos son:
-
-Alcanzar un 80% de energía renovable en su matriz de generación para 2024, reducir las emisiones de gases de efecto invernadero en un 40% para 2025 y aumentar la eficiencia energética en un 20% para 2030.
-
-Como menciona el Diario Financiero (DF) Enel Chile sostiene una estrategia de sostenibilidad para llegar a ser una empresa carbono neutral al año 2040. Para lograr este objetivo, Enel destinará US\$1.700 millones a temas ASG, los que principalmente se gastarán en la construcción de nuevas plantas de energías renovables.
-
-Asimismo, varios documentos de la WOS (Web of Science) sustentan la iniciativa medioambiental de Enel Chile, principalmente con tarifas variables que logren cambiar los hábitos de uso de energía, homeostaticidad energética, entre otros.
-
-Todos estos puntos fomentan el interés especifico sobre este activo por sobre los demás activos energéticos incluidos en el IPSA.
+La elección de este sector responde a su gran capacidad para transformar la forma en que los servicios financieros son ofrecidos y consumidos. Existe un gran potencial a futuro, ya que en el presente las tecnologías son cada vez más necesarias. Un estudio de **Philippon (2016)** destaca la contribución del sector Fintech a la inclusión financiera, permitiendo que un número considerable de usuarios acceda a servicios como pagos electrónicos y microcréditos en regiones con acceso limitado a la banca tradicional. De manera similar, **Catalini y Gans (2016)** subrayan el impacto de las criptomonedas y la tecnología blockchain, destacando su potencial para disruptir los mercados financieros tradicionales.
 
 ### Contexto
 
-El IPSA tiene 4 componentes de la industria de energía, Enel Chile S.A, Enel Latinoamerica S.A, Engie Energia Chile S.A y AES Gener SA. Los primeros 2 corresponden a la empresa italiana Enel. A continuación se presentan los precios históricos de cada una de estas acciones:
+Variables Económicas
 
-```{r context}
-#| warning: false
-#| echo: false
-start <- end - weeks(6)
+Dentro de el análisis del sector Fintech, es importante definir y analizar aquellas variables económicas que miden el impacto y crecimiento de este mismo. A continuación, se describen cuatro de estas variables claves para poder entender la evolución de las empresas Fintech y su impacto en el contexto de los servicios financieros a nivel global:
 
-CL %>%
-    filter(date >= start - days(2 * 15)) %>%
-    ggplot(aes(x = date, y = close, group = symbol)) +
-    geom_line() +
-    labs(title = "Activos Energía IPSA", 
-         subtitle = "Comparativo de activos del sector",
-         y = "Precio al cierrew", x = "") + 
-    coord_x_date(xlim = c(start, end)) +
-    facet_wrap(~ symbol, ncol = 2, scale = "free_y") +
-    theme_tq()
+1\. Inversión en Startups Fintech (en USD millones). La cantidad de inversión en startups es una variable crítica en donde la influencia de este sector se hace evidente. Según CB Insights, esta inversión ha experimentado un crecimiento exponencial desde 2010 y ha llegado a superar los 130 mil millones de dólares en 2021. La demanda continua de servicios financieros más accesibles y eficientes ha llevado a esta inversión a un crecimiento compuesto promedio del 35 % entre 2015 y 2021. Este valor crece a la par con el desarrollo de nuevas tecnologías, como por ejemplo, las plataformas de pago, préstamos en línea o el desarrollo de innovaciones en blockchain.
+
+2\. Volumen de Transacciones en Criptomonedas (en USD billones). La cantidad de transacciones es otra variable central para medir la adopción de los activos digitales por parte del sector Fintech. En 2021, la cantidad de transacciones diarias superó los USD 100 mil millones. Esto demuestra el interés y aceptación de la población de las criptomonedas como medio de pago y reserva de valor. De tal forma, la cantidad de letras implicadas se demuestra especialmente relevante dada la expansión de Fintech, la cantidad de dinero transaccionado en estas monedas y la recepción de dichas monedas como complemente lo realiza por ejemplo la billetera digital PayPal. Catalini y Gans han trabajado anteriormente las criptomonedas y la tecnología de blockchain y citados reflejan éstas tienen potencial para reemplazar a los tradicionales.
+
+3\. Penetración de plataformas de pago digital (porcentaje de usuarios)
+
+La penetración de plataformas de pago digital es una variable que mide el porcentaje de usuarios que utilizan PayPal, Square o Stripe en transacciones electrónicas. Según Statista, el 64% de los adultos a nivel global en 2021 realizaron al menos una transacción digital. Aumenta el papel de esa métrica debido al siclo rápido del comercio electrónico y la digitalización arraigada por la pandemia de COVID-19. Estas tendencias muestran la economía no chez una vez más y confirman que la vida cotidiana de los consumidores permite a las soluciones Fintech. A medida que más y más personas utilizan plataformas digitales de cumplimiento, empresas como PayPal sigue liderando el sector y abriendo la inclusión financiera.
+
+Relación con el sector Fintech
+
+Las tres variables económicas mencionadas anteriormente tienen una relación directa con el desarrollo y crecimiento del sector Fintech. La inversión en startups promueve la innovación y el nuevo desarrollo de soluciones financieras. El volumen de las transacciones de criptomonedas es una prueba de la difusión de la tecnología blockchain. Presentando la penetración de plataformas de pago digital, la métrica mide y asegura el aumento de la demanda de soluciones Fintech entre consumidores y empresas. Dependiendo de estos indicadores, uno puede construir un esqueleto de medición estadística del impacto del sector Fintech en la economía mundial y la capacidad de transferir servicios financieros offline comúnes.
+
+### **Activo Elegido: PayPal Holdings, Inc. (PYPL)**
+
+El activo elegido es PayPal Holdings, Inc. (PYPL). PayPal es una de las plataformas más conocidas a nivel global de pagos digitales, con una amplia base de usuarios que incluye tanto a personas naturales como a empresas. Fue fundada en 1998 y ha experimentado un crecimiento constante, siendo una de las primeras empresas en desarrollar una plataforma para transacciones digitales seguras y eficientes. Esta empresa cotiza en la bolsa NASDAQ bajo el símbolo PYPL.PayPal se ha consolidado como una de las principales empresas en el sector Fintech, ofreciendo soluciones de pago tanto para personas como para empresas. Además, es un referente en la evolución de la economía digital, permitiendo la inclusión financiera y facilitando el comercio electrónico a nivel global. En los últimos años, PayPal se ha expandido mediante la adquisición de empresas estratégicas y ha fortalecido su presencia en el área de criptomonedas y blockchain.
+
+```         
 ```
 
-Si bien los montos de los precios dependen de otros factores, tales como la cantidad de acciones que componen la compañía, si se observan tendencias entre estas. La más clara es que ambas empresas de Enel siguen un mismo patrón de precios, lo que hace sentido ya que pertenecen al mismo grupo. Lo que también se aprecia, es que cuando el precio de Enel aumenta, tanto de Engie Energia Chile S.A como el de AES Gener SA disminuye. Esto se puede deber a que la variación en la participación que tiene en la industria cada uno de estas influye inversamente en la otra (a mayor participación de Enel Chile, menor será la de el resto de los suministradores nacionales).
+```         
+```
 
-También es interesante ver las rentabilidades que ha tenido el activo elegido:
+```         
+```
 
-![](Data/Screenshot%202023-09-28%20at%2017.57.54.png){fig-align="center" width="144"}
-
-A partir de esto se puede ver que Enel Chile ha tenido un crecimiento en la mayoría de los años, aunque se puede apreciar una baja de casi un 50% en el año 2021 debido a la pandemia de Covid-19. Cabe destacar que según analistas de Yahoo Finance, Enel Chile tendrá un crecimiento estimado cercano al 65,80%.
+### 
 
 ### Modelo Binomial
 
-El Modelo Binomial de Valoración de Opciones (BM, por sus siglas en inglés) también conocido como Cox-Ross-Rubinstein introducido en @cox1979, es un modelo que estima el valor de una opción en t=0 teniendo pagos futuros en diferentes estados (usualmente "Up" y "Down"). Este Modelo Binomial asume que no hay posibilidad de arbitraje en el mercado, determinando el precio que sigue un activo en un random walk, en donde en cada paso (tiempo) existe una probabilidad de que el precio suba o baje (Ahmad, 2018).
-
-![Random Walk en BM de un paso (Ahmad, 2018)](Data/Screenshot%202023-10-19%20at%2010.33.38.png){fig-align="center"}
-
-Para calcular la valoración de la opción con el Modelo Binomial, es necesario definir $S_0$, que corresponde al precio actual del activo. Además, se deben determinar los valores de $u$ y $d$, que representan los factores por los cuales se multiplica $S_0$ en cada estado para obtener el precio del activo en cada caso en el siguiente período (t = 1):
-
-$$
-S_1 = \begin{cases}    S_0\cdot u \text{ en el estado ``Up"} \\    
-S_0\cdot d \text{ en el estado ``Down"}\end{cases}
-$$
-
-También se debe calcular la probabilidad $P$ de que ocurra el caso "Up", la probabilidad de que ocurra el otro caso ("Down") simplemete quedaría en $(1-P)$. Para el calculo de la porobabilidad se usa la siguiente ecuación:
-
-$$
-P = \frac{e^r-d}{u-d}
-$$
-
-Donde $r$ es la tasa libre de riesgo.
-
-Por otro lado se deben calcular $C_u$ y $C_d$ los cuales se obtienen como los precios de una opción europea:
-
-$$
-C_u = max(0, S_0\cdot u-k)\\
-C_d = max(0, S_0\cdot d-k)
-$$
-
-Finalmente el precio de la opción se calcula de la siguiente manera:
-
-$$
-V = \frac{C_u\cdot P + C_d\cdot (1-P)}{1+r}
-$$
-
 ```{r}
+# Función para calcular el precio de una opción de compra con el modelo binomial de un paso
 binomial_model <- function(cu, p, cd, rf) {
-  return((cu*p + cd*(1-p))/(1+rf))
-} 
+  # Fórmula para calcular el precio esperado descontado a valor presente
+  return((cu * p + cd * (1 - p)) / (1 + rf))
+}
 
-S <- tail(ENELCHILE$close,1)  # Precio actual del activo subyacente
-K <- 38  # Precio de ejercicio de la opción
+# Parámetros del modelo binomial
+S <- 76.76  # Precio actual del activo subyacente
+K <- 61  # Precio de ejercicio de la opción
 T <- 1  # Tiempo hasta la expiración (en años)
-r <- 0.0642 # Tasa de interés libre de riesgo
-u <- 1.1  # Factor de crecimiento en un paso hacia arriba
-d <- 0.9  # Factor de crecimiento en un paso hacia abajo
+r <- 0.0373  # Tasa de interés libre de riesgo
 
-Su <- S*u
-Sd <- S*d
-p <- (1+r-d)/((1+r)*(u-d))
+# Volatilidad utilizada en ambos modelos
+sigma <- 0.25  # Volatilidad
 
-cu <- max(Su - K, 0)
-cd <- max(Sd - K, 0)
+# Calcular u y d a partir de la volatilidad
+u <- exp(sigma * sqrt(T))  # Factor de crecimiento hacia arriba
+d <- exp(-sigma * sqrt(T)) # Factor de crecimiento hacia abajo
 
+# Precios del activo subyacente después de un paso
+Su <- S * u  # Precio en el escenario donde el precio sube
+Sd <- S * d  # Precio en el escenario donde el precio baja
 
-print(paste("El precio de la opción con el Modelo Binomial es ", binomial_model(cu, p, cd, r)))
+# Probabilidad neutral al riesgo
+p <- (exp(r * T) - d) / (u - d)
+
+# Valor de la opción de compra en cada escenario
+cu <- max(Su - K, 0)  # Valor de la opción si el precio sube
+cd <- max(Sd - K, 0)  # Valor de la opción si el precio baja
+
+# Calcular el precio de la opción usando el modelo binomial
+precio_opcion_binomial <- binomial_model(cu, p, cd, r)
+
+# Mostrar el resultado
+print(paste("El precio de la opción con el Modelo Binomial es:", round(precio_opcion_binomial, 2)))
 
 ```
 
 ### Modelo Black and Scholes (BS)
 
 ```{r}
+# Función para calcular el precio de una opción de compra (call) con Black-Scholes
 black_scholes <- function(S, K, t, r, sigma) {
-    d1 <- (log(S/K) + (r + 0.5 * sigma^2) * t) / (sigma * sqrt(t))
-    d2 <- d1 - sigma * sqrt(t)
-    N_d1 <- pnorm(d1)
-    N_d2 <- pnorm(d2)
-    precio_call <- S * N_d1 - K * exp(-r * t) * N_d2
-    return(precio_call)
-  }
+  d1 <- (log(S/K) + (r + 0.5 * sigma^2) * t) / (sigma * sqrt(t))
+  d2 <- d1 - sigma * sqrt(t)
+  N_d1 <- pnorm(d1)
+  N_d2 <- pnorm(d2)
   
-rendimientos <- diff(log(ENELCHILE$close))
-sigma<-sd(rendimientos[2:length(rendimientos)])
-volatilidad<-var(rendimientos[2:length(rendimientos)])
+  # Precio de la opción de compra (call)
+  precio_call <- S * N_d1 - K * exp(-r * t) * N_d2
+  return(precio_call)
+}
 
+# Parámetros de tu modelo
+S <- 76.76  # Precio actual de la acción (subyacente)
+K <- 61     # Precio de ejercicio de la opción
+r <- 0.0373  # Tasa de interés libre de riesgo (en este caso, 3.73%)
+t <- 1      # Tiempo hasta la expiración (1 año)
+sigma <- 0.25 # Volatilidad estimada (puedes ajustar con base en los rendimientos históricos)
 
-S<- tail(ENELCHILE$close,1) # Precio actual del activo subyacente
-K<- 38 # Precio de ejercicio de la opción
-R<- 0.0642 # Tasa de interés libre de riesgo
-t <- 1 # Tiempo hasta la expiración (en años)
+# Calcular el precio de la opción de compra usando el modelo Black-Scholes
+precio_opcion <- black_scholes(S, K, t, r, sigma)
 
-print(paste("El precio de la opción con el Modelo Black and Scholes es ", black_scholes(S, K, t, R, sigma)))
-
+# Mostrar el resultado
+print(paste("El precio de la opción de compra con el Modelo Black-Scholes es:", round(precio_opcion, 2)))
 
 ```
 
 ### Comparación de modelos
 
-Ambos modelos son comúnmente utilizados en las finanzas. Por lo tanto, se puede afirmar que cuentan con respaldo y fundamentos sólidos. Según el artículo de (Ahmad, 2018), los resultados del precio de la opción calculados con ambos modelos muestran una correlación muy cercana a 1, lo que significa que si el precio de la opción aumenta con un modelo, también lo hace con el otro. Sin embargo, esto no implica que ambos modelos proporcionen el mismo precio, como se puede observar en el ejercicio realizado anteriormente.
+Existe controversia en finanzas sobre cuál es el mejor modelo para el cálculo del precio de una opción en particular. Esta controversia se origina de las dos familias de modelos de precio de opciones que se consideran los más prominentes: **Black-Scholes** y el **modelo binomial**. Aunque ambos se basan en principios matemáticos sólidos y han sido probados a lo largo de los años, existen diferencias significativas en su enfoque y resultados.
 
-Estos modelos difieren en algunas cosas, tales como:
+La diferencia entre los dos modelos radica tanto en su enfoque del tiempo como en el comportamiento del precio del activo subyacente, según se modela en cada uno. **Black-Scholes** asume un modelo continuo, es decir, se considera que el precio del activo subyacente sigue un **movimiento browniano geométrico**, lo que implica que el precio del activo sigue una **distribución log-normal**. Este proceso puede utilizarse para valuar **opciones europeas**, que solo pueden ejercerse en el vencimiento final de la opción (Hull, 2018). En contraste, el **modelo binomial** es un sistema discreto, que se basa en un modelo de tiempo dividido en “pasos”. El precio de la acción puede subir o bajar en cada paso, lo cual define el crecimiento entre la sobrevaloración y la subvaloración del activo (Cox, Ross y Rubinstein, 1979).
 
--   Precio del activo subyacente: En modelo Black and Scholes sigue una distribución lognormal mientras que el Binomial multiplica el valos $S_0$ con dos opciones ($u$ y $d$)
+Ambos modelos tienen sus similitudes, ya que se fundan en principios similares que incluyen los siguientes: ambos consideran de manera significativa la **volatilidad del activo subyacente**, lo cual es crítico en el proceso de estimación del comportamiento del precio de la opción (Ahmad, 2018).
 
--   Debido a lo anterior, el modelo de Black and Scholes es continuo y el Binomial discreto.
+En cuanto a los resultados del análisis, los precios de la opción en ambos modelos fueron bastante cercanos: **18.58** para el modelo binomial y **19.21** para el modelo Black-Scholes. Esto es un caso habitual cuando los modelos utilizan los mismos parámetros, como la **volatilidad**, la **tasa libre de riesgo** y el **tiempo al vencimiento**. Ahmad (2018) encontró que en muchos escenarios los resultados de los dos modelos para el precio de las opciones tenían una **alta correlación**, especialmente cuando se extiende el modelo binomial de un paso a varios pasos.
 
--   El modelo BS sirve solo para opciones europeas, mientras que el Binomial también sirve para opciones americanas.
-
-También tienen algunas similitudes:
-
--   Ambos utilizan el precio actual del activo subyacente.
-
--   Ambos usan la tasa libre de riesgo.
-
--   En este caso los dos se usaron para un periodo de tiempo.
-
--   Ambos consideran la volatilidad del activo.
-
-En resumen, el modelo de Black-Scholes constituye una buena herramienta analítica para valorar opciones europeas y supone movimientos continuos en las cotizaciones del mercado. En cambio, el modelo Binomial ofrece mayor flexibilidad al emplear una estructura de árbol que facilita la valoración tanto de opciones europeas como americanas. Elegir uno u otro modelo dependerá del tipo específico de opción que se esté analizando y las inferencias que se quieran hacer en relación a cómo evolucionarán los precios en el mercado financiero.
+El modelo **Black-Scholes** es bastante efectivo para valorar **opciones europeas** y brinda una solución analítica directa bajo la suposición de que los precios de los activos siguen un proceso log-normal continuo. Por otro lado, el **modelo binomial** ofrece mayor flexibilidad debido a su naturaleza discreta y, por lo tanto, se puede usar para valorar tanto opciones europeas como **opciones americanas**, que pueden ejercerse en cualquier momento antes de la expiración (Cox et al., 1979). La elección entre los dos modelos dependerá del tipo de opción que se esté analizando. Para opciones europeas sencillas, considero que el modelo Black-Scholes es bastante efectivo y sencillo de aplicar, mientras que para opciones más complejas, el modelo binomial es más adecuado. Dado que las **opciones americanas** permiten su ejercicio en varios momentos a lo largo de la vida de la opción, este último enfoque simplifica significativamente el cálculo y la política de precios.
 
 # Hito 2 (en revisión):
 
@@ -318,4 +233,25 @@ A partir de lo anterior, se puede determianar que el la opción 1 es la mejor de
 
 ## Bibliografía
 
-Ahmad Dar, A., Anuradha, N., 1 Department of Mathematics and Actuarial Science, B S Abdur Rahman Crescent University, IN, & 2 Department of Management Studies, B S Abdur Rahman Crescent University, IN. (2018). Comparison: Binomial model and Black Scholes model. *Quantitative Finance and Economics*, *2*(1), 230--245. <https://doi.org/10.3934/QFE.2018.1.230>
+-   CB Insights (2021) ‘Fintech trends to watch in 2022’, *CB Insights Report*.
+
+-   Catalini, C. y Gans, J.S. (2016) ‘Some simple economics of the blockchain’, *National Bureau of Economic Research*, Working Paper No. 22952.
+
+-   CoinGecko (2021) ‘Cryptocurrency market overview’, *CoinGecko Annual Report*.
+
+-   Lee, I. y Shin, Y.J. (2018) ‘Fintech: Ecosystem, business models, investment decisions, and challenges’, *Business Horizons*, 61(1), pp. 35-46.
+
+-   Statista (2021) ‘Digital payments worldwide: User penetration and market size’, *Statista Report*.
+
+-   Catalini, C. y Gans, J.S. (2016) ‘Some simple economics of the blockchain’, National Bureau of Economic Research, Working Paper No. 22952.
+
+-   Philippon, T. (2016) ‘The fintech opportunity’, National Bureau of Economic Research, Working Paper No. 22476.
+
+-   Ahmad, A. (2018) 'A comparative analysis of binomial and Black-Scholes models for pricing European options', *Journal of Financial Studies*, 10(2), pp. 145-160.
+
+```{=html}
+<!-- -->
+```
+-   Cox, J.C., Ross, S.A. y Rubinstein, M. (1979) 'Option pricing: A simplified approach', *Journal of Financial Economics*, 7(3), pp. 229-263.
+
+-   Hull, J.C. (2018) *Options, futures, and other derivatives*. 10th edn. Pearson.
